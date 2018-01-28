@@ -19,7 +19,7 @@ env:
 before_deploy:
   - mix escript.build
   - docker build --rm -t echo-service-elixir ./
-  - docker tag ${DOCKER_HUB_USERNAME}/echo-service-elixir:latest
+  - docker tag echo-service-elixir ${DOCKER_HUB_USERNAME}/echo-service-elixir:latest
   - docker login --username=${DOCKER_HUB_USERNAME} --password=${DOCKER_HUB_PASSWORD}
 
 deploy:
