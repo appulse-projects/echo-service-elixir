@@ -2,7 +2,30 @@
 language: elixir
 
 elixir:
-  - '1.6.0'
+  - 1.6.0
 
 otp_release:
-  - '20.1.7'
+  - 20.1.7
+
+services:
+  - docker
+
+env:
+  global:
+    - secure: NvJos5T7WwPJ/bxO6cZVZGbxfDoX4JheZrOhfAwQOhOs3Nvea4/Yt8A3FWbhdkzwV5t3WOMXENalUhb4L/qyILqQg9jXtHaHukBEjSqnfC1J1+J7+xyH05OtedsOMN40IT3a0pvstlNYYb73R32MipYc1s5oQf/8hz9MiiKP5Q8WTE4Q7dbtjejGxTYLpEcDjEZ+Wc3Stzwx2Vz+xK1IPR8MnPUt8zoLP4SjkBhUDLBf+30Yr7udXzjhxFo/d0ayjnyff397QU0KX/m8NbMR+x3t4A8YS78nKMAWveYGJEFRYvHmvt3j5nb3kQiOBreudrUUwTiJ7fNemH5+Koqo4QbHX9HEeZMjJGXPFdOcFED3ObLMxH3Vn2ZRj7M9FG+22WVX8SsTgu1fHEGAZ0pC6o3V11eKBfMogpwjo/8sTQ/djv5D0Du47Vm5zvRZADYA0U/7N6AOYr+/6cqUHtExkTQLhFmAJ/l9dZOtJ47tA1egCLHMqJtn6dZEReBtUteXg/1z5vXMOOZoOd2cxh/WQ10r8zoz4k86mjD+GoLq1o3PY9xdgFAvBpns21tYay02voX6wWGErMyfyWqgD4GXGBTYSeFF9ZSxbwN9i9zugUUWFLNZiwSLXsWu9u2dTcRB/srCa4EZUm364ftD/ElpudMQU0VAvIfbtWWxhgiPT4A=
+    - secure: gg1yLT0wQu3Mt7pdGG0/SwH79kIDNflohtkmEFgqOJlYD6xNN8IaEfVPoISM0qoP1tR8fmL6BAcXrT6MRLWFfrdPCCRS2MVOsfTYwcPXAKDHfje9DLFuRIgJlfvwkIBDXrGUFxUnoD/rluPmGU/tfG7g9ZJ2jgk95ORc7JlbWJ9gnnJ85ZZ39Fw9lV/B6hGEw06omInc3F91RFNvNJL2eejIZ3Yuaw0o14/XdYh4ofLdv1HXoqzL6bSlOFTP11tb9Qk/+yjnOdpiwin4sNoc96BFeZuXwkP+ZM5t+QLo1M61c3QDDghjshxcdovBKofbNcN+QEQb1+Bey3cCZCKRJ9QM3SBB9BGAj3/y9DCLKNOxaALsWXUepmZUhgZV8KASI8J1vXZPpxxlX5wzWzU2/vr9cpS9jY/qLy5HbgwyxB82ZP/Lav+tOvdk0ywLzKPYGra7BBd0lxlu4gBh+YPj73UpOS6JdFyTNu10xtpCUouuaw7kj0Pw2pr8eAXsXlqJDTrtB2PvbUiGB48UL1mBbAYW7ordNYRhQZqORcrxmVSdxBXEontVYWu6EX+EGBEcwHWoSbQnY0EmyMRYbqNK1k3tNJLhIbWkrUcMLDjtkSvprOu/CAJJ8ytIwK9OysjzYk48kC/RjxH0x9j/C3TNJSIA+Zq30aYMfV/mqj1rkkA=
+    - secure: t+U3LP8kjnyjwCzJEAGcFAF3PVUGvRHGpKf5sbr15Ik/qVQ5yZq3SHCFbDvD9BWh1z2DgCkeNdFmEvj7cXM42VVsh4uVzSlAJCynxKRWQjGOdY9IBwHp6OAIgYRIsTSBH+6OQCm8bIG5wqBG8oiJy+ogMu5HwR475VepnVzqRM77NHURtOZ6FxfNsj8kTBMgbVA81XBvk1BzXGHFCu5eWwuUoeyqlFHL/UiK0i4ZurhxI0iBgdwYwO7TRSYR5kDxqwvQglVGNnvqeXP1mXBiJvu1Uth+/Hx/28znjJXNxAnccZhoV49VN6ckUqHhzfdfGDEnzqD5c3K6blo7JXdxvIGx4tBrPgOMwJJq4E7YJb7yN0lLHWVxsWwJxeEEp/GFcEEL17HZBF8TTygN5gYCOX8V594Su0gv6+YUzw5/3tDqAyjSyWztzYxZ7G3sOGmoko1LtcziA63OTZG7RwK5Eof4QD7eVgXe9ctzdCwWCIQOChTg+qbg/+MRrY0Oc4RiSe4MAQRiLUMRTuE5zqurnI9gHjsI4n8cwORGQC/rk46rW7S7bkaA0QtLXNubnhn6P7pPS+jt3k/5T+34uRlCYt+rgqUvdTST2l3a1Rp2d8Vi9l34iNO71rrkIZc0qcZcePeppDqUTIKuePADZniLK37i6FId881SAJtReLKYB6Y=
+
+before_deploy:
+  - mix escript.build
+  - docker build --rm -t echo-service-elixir ./
+  - docker tag ${DOCKER_HUB_USERNAME}/echo-service-elixir:latest
+  - docker login --email=${DOCKER_HUB_EMAIL} --username=${DOCKER_HUB_USERNAME} --password=${DOCKER_HUB_PASSWORD}
+
+deploy:
+  provider: script
+  script: docker push ${DOCKER_HUB_USERNAME}/echo-service-elixir:latest
+  skip_cleanup: true
+  on:
+    branch: master
+    tags: true
