@@ -6,12 +6,12 @@ Simple echo server `Elixir` project for test purposes.
 
 ```bash
 $> docker run \
-    --name elixir-test-echo \
+    --name echo-service-elixir \
     --detach \
     --publish 4369:4369 \
     --net=host \
     --network="host" \
-    xxlabaza/elixir-test-echo \
+    xxlabaza/echo-service-elixir \
       --cookie=secret \
       --name=echo@{IP}
 ```
