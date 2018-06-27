@@ -29,13 +29,15 @@ defmodule Echo.CLI do
       name: :string,
       cookie: :string,
       version: :boolean,
-      help: :boolean
+      help: :boolean,
+      debug: :boolean
     ]
     aliases = [
       n: :name,
       c: :cookie,
       v: :version,
-      h: :help
+      h: :help,
+      d: :debug
     ]
     {switches, argv} = OptionParser.parse!(args, strict: strict, aliases: aliases)
 
